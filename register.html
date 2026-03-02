@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParkEase - Vehicle Registration</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <!-- Same sidebar as dashboard -->
+        </aside>
+
+        <main class="main-content">
+            <header class="top-bar">
+                <h1>Vehicle Registration</h1>
+                <div class="user-profile">
+                    <i class="fas fa-user-circle"></i>
+                    <span id="loggedInUser">Attendant</span>
+                </div>
+            </header>
+
+            <form id="registrationForm" class="registration-form">
+                <!-- Driver Information -->
+                <section class="form-section">
+                    <h2>Driver Information</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="driverName">Driver Name *</label>
+                            <input type="text" id="driverName" name="driverName" 
+                                   placeholder="Enter full name" required>
+                            <small class="hint">Must start with capital letter</small>
+                        </div>
+                        <div class="form-group">
+                            <label for="phoneNumber">Phone Number *</label>
+                            <input type="tel" id="phoneNumber" name="phoneNumber" 
+                                   placeholder="+256 XXX XXX XXX" required>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Vehicle Information -->
+                <section class="form-section">
+                    <h2>Vehicle Information</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="vehicleType">Vehicle Type *</label>
+                            <select id="vehicleType" name="vehicleType" required>
+                                <option value="">Select vehicle type</option>
+                                <option value="Truck">Truck</option>
+                                <option value="Personal Car">Personal Car</option>
+                                <option value="Taxi">Taxi</option>
+                                <option value="Coaster">Coaster</option>
+                                <option value="Boda-boda">Boda-boda</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="numberPlate">Number Plate *</label>
+                            <div class="input-with-icon">
+                                <i class="fas fa-hashtag"></i>
+                                <input type="text" id="numberPlate" name="numberPlate" 
+                                       placeholder="UBA 123X" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="vehicleModel">Vehicle Model & Color</label>
+                            <input type="text" id="vehicleModel" name="vehicleModel" 
+                                   placeholder="e.g., Toyota Corolla, Blue">
+                        </div>
+                    </div>
+                </section>
+
+                <!-- NIN Section (shown only for Boda-boda) -->
+                <section class="form-section" id="ninSection" style="display: none;">
+                    <h2>National ID (Required for Boda-boda)</h2>
+                    <div class="form-group">
+                        <label for="nin">NIN Number *</label>
+                        <input type="text" id="nin" name="nin" 
+                               placeholder="CM/12345678">
+                    </div>
+                </section>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-print"></i> Register & Print Receipt
+                    </button>
+                    <button type="button" class="btn-secondary" onclick="clearForm()">
+                        <i class="fas fa-times"></i> Clear Form
+                    </button>
+                </div>
+            </form>
+
+            <!-- Quick Tips Card -->
+            <div class="quick-tips">
+                <h3><i class="fas fa-keyboard"></i> Keyboard Shortcuts</h3>
+                <ul>
+                    <li><span class="shortcut">Alt + R</span> Register Vehicle</li>
+                    <li><span class="shortcut">Alt + C</span> Clear Form</li>
+                    <li><span class="shortcut">Alt + D</span> Go to Dashboard</li>
+                </ul>
+            </div>
+
+            <!-- Footer -->
+            <footer class="page-footer">
+                <div>System Version 2.1.0</div>
+                <div>Session started: <span id="sessionTime">Just now</span></div>
+            </footer>
+        </main>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/validation.js"></script>
+    <script src="js/register.js"></script>
+</body>
+</html>

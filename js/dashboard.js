@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
 // Sample data for recent arrivals
 function loadRecentArrivals() {
     const arrivals = [
-        { time: '09:30', plate: 'UBA 123X', type: 'Honda', status: 'Parked' },
+        { time: '09:30', plate: 'UBA 123X', type: 'Personal Car', status: 'Parked' },
         { time: '09:15', plate: 'UBE 456Y', type: 'Taxi', status: 'Parked' },
         { time: '08:45', plate: 'UAA 789Z', type: 'Truck', status: 'Parked' },
         { time: '08:30', plate: 'UBC 101A', type: 'Boda-boda', status: 'Signed Out' },
