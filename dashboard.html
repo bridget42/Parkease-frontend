@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParkEase - Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>ParkEase</h2>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active"><a href="dashboard.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                    <li><a href="register.html"><i class="fas fa-car"></i> Registration</a></li>
+                    <li><a href="signout.html"><i class="fas fa-sign-out-alt"></i> Sign-out</a></li>
+                    <li><a href="reports.html"><i class="fas fa-chart-bar"></i> Reports</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i>
+                    <span id="loggedInUser">Attendant</span>
+                </div>
+                <button onclick="logout()" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Sign out</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <header class="top-bar">
+                <div class="search-bar">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search...">
+                </div>
+                <div class="top-bar-right">
+                    <div class="shift-info">
+                        <i class="far fa-clock"></i>
+                        <span>Shift: 08:00 - 16:00</span>
+                    </div>
+                    <div class="notifications">
+                        <i class="far fa-bell"></i>
+                        <span class="badge">3</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Stats Cards -->
+            <div class="stats-row">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3>Total Vehicles Parked</h3>
+                        <p class="stat-number">24</p>
+                        <span class="stat-change">+3 today</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-money-bill"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3>Today's Revenue</h3>
+                        <p class="stat-number">UGX 245,000</p>
+                        <span class="stat-change">↑ 12%</span>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-parking"></i>
+                    </div>
+                    <div class="stat-details">
+                        <h3>Available Slots</h3>
+                        <p class="stat-number">42/80</p>
+                        <div class="progress-bar">
+                            <div class="progress" style="width: 52%"></div>
+                        </div>
+                        <span>52% Occupied</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <button class="action-btn primary" onclick="window.location.href='register.html'">
+                    <i class="fas fa-plus-circle"></i> Register Arrival
+                </button>
+                <button class="action-btn secondary" onclick="window.location.href='signout.html'">
+                    <i class="fas fa-sign-out-alt"></i> Vehicle Sign-out
+                </button>
+                <button class="action-btn outline">
+                    <i class="fas fa-print"></i> Print Daily Summary
+                </button>
+            </div>
+
+            <!-- Recent Arrivals Table -->
+            <section class="recent-arrivals">
+                <h2>Recent Arrivals</h2>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Time</th>
+                            <th>Plate Number</th>
+                            <th>Vehicle Type</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentArrivalsTable">
+                        <!-- Data will be populated by JavaScript -->
+                    </tbody>
+                </table>
+            </section>
+        </main>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>
