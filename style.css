@@ -16,7 +16,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-     background: linear-gradient(135deg, #1E3A5F 0%, #2E75B6 100%);
+     background: linear-gradient(135deg, #037562 0%, #08836e 100%);
 }
 .login-container {
     width: 100%;
@@ -34,12 +34,12 @@ body {
     margin-bottom: 30px;
 }
 .logo-area h1 {
-      color: #1E3A5F;
+      color: #04372f;
     font-size: 32px;
     margin-bottom: 5px;
 }
 .logo-area p {
-    color: #666;
+    color: #17cfb0;
     font-size: 14px;
 }
 
@@ -70,7 +70,7 @@ body {
 .btn-primary {
    width: 100%;
     padding: 14px;
-    background-color: #1E3A5F;
+    background-color: #17cfb0;
     color: white;
     border: none;
     border-radius: 6px;

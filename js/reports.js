@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
     nextDayBtn.addEventListener('click', function() {
         currentDate.setDate(currentDate.getDate() + 1);
         updateDateDisplay();
-        updateRevenueCards();    // Would fetch new data
+        updateRevenueCards();  // Would fetch new data
     });
     
     // Table search/filter

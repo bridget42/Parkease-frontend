@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ParkEase Dashboard</title>
+   
+    <!-- Bootstrap CSS and Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+   
+    <style>
+        /* 1. SIMPLE COLORS */
+        :root {
+            --primary: #17cfb0;
+            --bg-light: #f8f9fa;
+            --shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+       
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-light);
+        }
+       
+        /* 2. TOP NAVIGATION */
+        .top-nav {
+            background: white;
+            border-bottom: 1px solid #eee;
+            box-shadow: var(--shadow);
+        }
+       
+        /* 3. METRIC CARDS */
+        .metric-card {
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s;
+        }
+       
+        .metric-icon {
+            width: 48px;
+            height: 48px;
+            background: rgba(23,207,176,0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 20px;
+        }
+       
+        /* 4. STATUS BADGES */
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+       
+        .status-parked { background: #d4edda; color: #155724; }
+        .status-exiting { background: #cce7ff; color: #004085; }
+        .status-overstay { background: #f8d7da; color: #721c24; }
+       
+        /* 5. TABLE STYLING */
+        .activity-table {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+       
+        /* 6. MAP SECTION */
+        .map-preview {
+            height: 200px;
+            background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+            border-radius: 15px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+       
+        /* 7. QUICK ACTION BUTTONS */
+        .action-btn {
+            border: 1px solid #eee;
+            border-radius: 15px;
+            padding: 20px;
+            text-align: left;
+            transition: all 0.3s;
+        }
+       
+        .action-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            transition: transform 0.3s;
+        }
+       
+        .action-btn:hover .action-icon {
+            transform: scale(1.1);
+        }
+       
+        /* 8. OCCUPANCY CHART */
+        .occupancy-circle {
+            width: 120px;
+            height: 120px;
+            position: relative;
+        }
+       
+        .circle-bg {
+            fill: none;
+            stroke: #374151;
+            stroke-width: 12;
+        }
+       
+        .circle-progress {
+            fill: none;
+            stroke: var(--primary);
+            stroke-width: 12;
+            stroke-dasharray: 314;
+            stroke-dashoffset: 47; /* 85% = 314 * 0.15 */
+            transition: stroke-dashoffset 1s;
+        }
+    </style>
+</head>
+<body>
+    <!-- 1. TOP NAVIGATION BAR -->
+    <nav class="navbar navbar-expand-lg top-nav px-4 py-3 sticky-top">
+        <div class="container-fluid">
+            <!-- Logo & Title -->
+            <div class="d-flex align-items-center gap-3">
+                <div class="bg-primary text-white p-3 rounded-3 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
+                    <i class="bi bi-car-front-fill fs-3"></i>
+                </div>
+                <div>
+                    <h2 class="mb-1 fw-bold fs-2">ParkEase</h2>
+                    <p class="mb-0 text-primary small fw-medium text-uppercase" style="letter-spacing: 2px;">Premium Parking</p>
+                </div>
+            </div>
+           
+            <!-- Navigation Links (Desktop) -->
+            <ul class="navbar-nav d-none d-md-flex gap-2">
+                <li class="nav-item">
+                    <a class="nav-link px-3 py-2 text-primary bg-light rounded-3 fw-medium" href="#">Dashboard</a>
+                </li>
+                <li class="nav-item"><a class="nav-link px-3 py-2 text-muted" href="#">Vehicles</a></li>
+                <li class="nav-item"><a class="nav-link px-3 py-2 text-muted" href="#">Revenue</a></li>
+                <li class="nav-item"><a class="nav-link px-3 py-2 text-muted" href="#">Reports</a></li>
+                <li class="nav-item"><a class="nav-link px-3 py-2 text-muted" href="#">Settings</a></li>
+            </ul>
+           
+            <!-- Right Side: Search, Notifications, User -->
+            <div class="d-flex align-items-center gap-3">
+                <!-- Search Box -->
+                <div class="d-none d-sm-flex">
+                    <div class="position-relative">
+                        <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-muted"></i>
+                        <input type="text" class="form-control ps-5 border-0 bg-light rounded-3" placeholder="Search vehicle or slot..." style="width: 250px;">
+                    </div>
+                </div>
+               
+                <!-- Notifications -->
+                <div class="position-relative">
+                    <button class="btn btn-outline-secondary btn-sm p-2 rounded-3">
+                        <i class="bi bi-bell"></i>
+                    </button>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="width: 8px; height: 8px;"></span>
+                </div>
+               
+                <!-- User Profile -->
+                <div class="d-flex align-items-center gap-2">
+                    <div class="text-end d-none d-sm-block">
+                        <div class="fw-bold small">Admin User</div>
+                        <div class="text-muted" style="font-size: 10px;">Super Admin</div>
+                    </div>
+                    <div class="bg-light p-2 rounded-circle">
+                        <i class="bi bi-person fs-5"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 2. MAIN CONTENT -->
+    <main class="container-fluid px-4 py-5">
+        <!-- Page Header -->
+        <div class="row align-items-center mb-5">
+            <div class="col-md-8">
+                <h2 class="h2 fw-bold mb-2">System Overview</h2>
+                <p class="text-muted fs-6">Monitoring real-time parking status and revenue.</p>
+            </div>
+            <div class="col-md-4 text-md-end">
+                    <div class="d-flex gap-2 justify-content-md-end">
+                    <button class="btn btn-outline-secondary btn-sm d-flex align-items-center gap-2">
+                        <i class="bi bi-calendar"></i> Today, Oct 24
+                    </button>
+                    <button id="exportReportBtn" type="button" class="btn btn-primary btn-sm d-flex align-items-center gap-2">
+                        <i class="bi bi-download"></i> Export Report
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. METRIC CARDS (3 columns) -->
+        <div class="row g-4 mb-5">
+            <!-- Vehicles Parked -->
+            <div class="col-md-4">
+                <div class="metric-card p-4 h-100">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="metric-icon">
+                            <i class="bi bi-car-front"></i>
+                        </div>
+                        <span class="badge bg-success py-1 px-2">
+                            <i class="bi bi-arrow-up"></i> +12%
+                        </span>
+                    </div>
+                    <p class="text-muted small mb-1">Total Vehicles Parked</p>
+                    <h3 class="h2 fw-bold mb-3">142</h3>
+                    <div class="progress" style="height: 6px;">
+                        <div class="progress-bar bg-primary" style="width: 78%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Revenue -->
+            <div class="col-md-4">
+                <div class="metric-card p-4 h-100">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="metric-icon" style="color: #f59e0b; background: rgba(245,158,11,0.1);">
+                            <i class="bi bi-cash-coin"></i>
+                        </div>
+                        <span class="badge bg-success py-1 px-2">
+                            <i class="bi bi-arrow-up"></i> +5.2%
+                        </span>
+                    </div>
+                    <p class="text-muted small mb-1">Today's Revenue</p>
+                    <h3 class="h2 fw-bold mb-3">UGX 450,000</h3>
+                    <small class="text-muted">Updated 2 mins ago</small>
+                </div>
+            </div>
+
+            <!-- Available Slots -->
+            <div class="col-md-4">
+                <div class="metric-card p-4 h-100">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <div class="metric-icon" style="color: #3b82f6; background: rgba(59,130,246,0.1);">
+                            <i class="bi bi-grid"></i>
+                        </div>
+                        <span class="badge bg-danger py-1 px-2">
+                            <i class="bi bi-arrow-down"></i> -8%
+                        </span>
+                    </div>
+                    <p class="text-muted small mb-1">Available Slots</p>
+                    <div class="d-flex align-items-baseline gap-2 mb-3">
+                        <h3 class="h2 fw-bold mb-0">28</h3>
+                        <small class="text-muted">/ 150 total</small>
+                    </div>
+                    <div class="d-flex gap-1">
+                        <div class="flex-fill bg-primary h-3 rounded-start"></div>
+                        <div class="flex-fill bg-primary h-3"></div>
+                        <div class="flex-fill bg-primary h-3"></div>
+                        <div class="flex-fill bg-primary h-3"></div>
+                        <div class="flex-fill bg-light h-3 rounded-end"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- 4. LEFT COLUMN (2/3 width) -->
+            <div class="col-lg-8">
+                <!-- Recent Activity Table -->
+                <div class="activity-table mb-4">
+                    <div class="p-4 border-bottom">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h4 class="h4 fw-bold mb-0">Recent Vehicle Activity</h4>
+                            <a href="#" class="text-primary fw-medium">View All</a>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Vehicle / ID</th>
+                                    <th>Status</th>
+                                    <th>Entry Time</th>
+                                    <th>Slot</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="bg-light p-2 rounded-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                                <i class="bi bi-car-front text-muted"></i>
+                                            </div>
+                                            <div>
+                                                <strong>UBA 123X</strong>
+                                                <div class="text-muted small">Toyota Premio</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="status-badge status-parked">Parked</span></td>
+                                    <td class="text-muted">09:45 AM</td>
+                                    <td><strong>A-12</strong></td>
+                                    <td class="text-end">
+                                        <button class="btn btn-link text-muted p-0">
+                                            <i class="bi bi-three-dots-vertical"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="bg-light p-2 rounded-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                                <i class="bi bi-car-front text-muted"></i>
+                                            </div>
+                                            <div>
+                                                <strong>UBB 456Y</strong>
+                                                <div class="text-muted small">Honda CR-V</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="status-badge status-exiting">Exiting</span></td>
+                                    <td class="text-muted">08:12 AM</td>
+                                    <td><strong>B-04</strong></td>
+                                    <td class="text-end">
+                                        <button class="btn btn-link text-muted p-0">
+                                            <i class="bi bi-three-dots-vertical"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="bg-light p-2 rounded-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                                <i class="bi bi-bicycle text-muted"></i>
+                                            </div>
+                                            <div>
+                                                <strong>KMC 789Z</strong>
+                                                <div class="text-muted small">Bajaj Boxer</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="status-badge status-parked">Parked</span></td>
+                                    <td class="text-muted">10:20 AM</td>
+                                    <td><strong>M-01</strong></td>
+                                    <td class="text-end">
+                                        <button class="btn btn-link text-muted p-0">
+                                            <i class="bi bi-three-dots-vertical"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center gap-3">
+                                            <div class="bg-light p-2 rounded-3 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                                <i class="bi bi-car-front text-muted"></i>
+                                            </div>
+                                            <div>
+                                                <strong>UAD 901A</strong>
+                                                <div class="text-muted small">Mercedes C200</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="status-badge status-overstay">Overstay</span></td>
+                                    <td class="text-muted">06:00 AM</td>
+                                    <td><strong>A-02</strong></td>
+                                    <td class="text-end">
+                                        <button class="btn btn-link text-muted p-0">
+                                            <i class="bi bi-three-dots-vertical"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Live Map Preview -->
+                <div class="card metric-card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h4 class="h4 fw-bold mb-0">Live Parking Layout</h4>
+                            <div class="d-flex gap-3 small text-muted">
+                                <span><span class="badge bg-primary me-1"></span> Occupied</span>
+                                <span><span class="badge bg-light border me-1"></span> Available</span>
+                            </div>
+                        </div>
+                        <div class="map-preview">
+                            <i class="bi bi-geo-alt fs-1 text-muted"></i>
+                            <div class="position-absolute bottom-0 end-0 p-1 small text-muted fw-bold" style="font-size: 10px;">
+                                Interactive Terminal A Map
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. RIGHT COLUMN (1/3 width) -->
+            <div class="col-lg-4">
+                <!-- Quick Actions -->
+                <div class="card metric-card mb-4">
+                    <div class="card-body">
+                        <h4 class="h4 fw-bold mb-4">Quick Actions</h4>
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <button id="quickRegisterBtn" type="button" class="action-btn w-100 text-start">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="action-icon bg-primary text-white">
+                                            <i class="bi bi-plus-lg"></i>
+                                        </div>
+                                        <div>
+                                            <strong>Register Entry</strong>
+                                            <div class="text-muted small">Check-in new vehicle</div>
+                                        </div>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col-12">
+                                <button id="quickCollectBtn" type="button" class="action-btn w-100 text-start border-warning bg-warning-subtle">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="action-icon bg-warning text-white">
+                                            <i class="bi bi-cash-coin"></i>
+                                        </div>
+                                        <div>
+                                            <strong>Collect Payment</strong>
+                                            <div class="text-muted small">End session & bill</div>
+                                        </div>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col-12">
+                                <button id="quickReceiptBtn" type="button" class="action-btn w-100 text-start">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="action-icon bg-primary text-white">
+                                            <i class="bi bi-receipt"></i>
+                                        </div>
+                                        <div>
+                                            <strong>Issue Receipt</strong>
+                                            <div class="text-muted small">Print last transaction</div>
+                                        </div>
+                                    </div>
+                                </button>
+                            </div>
+                            <div class="col-12">
+                                <button id="quickHistoryBtn" type="button" class="action-btn w-100 text-start">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="action-icon bg-secondary text-white">
+                                            <i class="bi bi-clock-history"></i>
+                                        </div>
+                                        <div>
+                                            <strong>History Logs</strong>
+                                            <div class="text-muted small">Review past activities</div>
+                                        </div>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Occupancy Circle -->
+                <div class="card metric-card bg-dark text-white">
+                    <div class="card-body p-4 position-relative overflow-hidden">
+                        <div class="position-absolute top-0 end-0 w-32 h-32 bg-primary bg-opacity-20 rounded-circle" style="bottom: -20px;"></div>
+                        <h4 class="h4 fw-bold mb-2">Peak Occupancy</h4>
+                        <p class="text-muted mb-4 small">Today's expected peak</p>
+                       
+                        <div class="d-flex justify-content-center mb-4">
+                            <div class="occupancy-circle">
+                                <svg width="120" height="120">
+                                    <circle class="circle-bg" cx="60" cy="60" r="52"></circle>
+                                    <circle class="circle-progress" cx="60" cy="60" r="52"></circle>
+                                </svg>
+                                <div class="position-absolute text-center" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">
+                                    <div class="h3 fw-bold mb-0">85%</div>
+                                    <div class="small text-muted" style="font-size: 10px;">Fullness</div>
+                                </div>
+                            </div>
+                        </div>
+                       
+                        <div class="d-flex justify-content-between small">
+                            <div>
+                                <div class="text-muted" style="font-size: 10px;">Estimated Peak</div>
+                                <strong>02:30 PM</strong>
+                            </div>
+                            <div class="text-end">
+                                <div class="text-muted" style="font-size: 10px;">Staff Required</div>
+                                <strong>4 Person</strong>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- 6. FOOTER -->
+    <footer class="bg-light border-top py-5 mt-5">
+        <div class="container">
+            <div class="row align-items-center justify-content-between">
+                <div class="col-md-6">
+                    <p class="mb-0 text-muted small">© 2024 ParkEase Management Solutions. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <a href="#" class="text-muted small me-3">Support Center</a>
+                    <a href="#" class="text-muted small me-3">Privacy Policy</a>
+                    <a href="#" class="text-muted small">Terms of Service</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        (function(){
+            var exportBtn = document.getElementById('exportReportBtn');
+            var regBtn = document.getElementById('quickRegisterBtn');
+            var collectBtn = document.getElementById('quickCollectBtn');
+            var receiptBtn = document.getElementById('quickReceiptBtn');
+            var historyBtn = document.getElementById('quickHistoryBtn');
+
+            if(exportBtn){
+                exportBtn.addEventListener('click', function(){
+                    window.location.href = 'reports.html';
+                });
+            }
+
+            if(regBtn){
+                regBtn.addEventListener('click', function(){
+                    window.location.href = 'vehicle.html';
+                });
+            }
+
+            if(collectBtn){
+                collectBtn.addEventListener('click', function(){
+                    window.location.href = 'sign.html';
+                });
+            }
+
+            if(receiptBtn){
+                receiptBtn.addEventListener('click', function(){
+                    window.location.href = 'reports.html';
+                });
+            }
+
+            if(historyBtn){
+                historyBtn.addEventListener('click', function(){
+                    window.location.href = 'reports.html';
+                });
+            }
+        })();
+    </script>
+</body>
+</html>
