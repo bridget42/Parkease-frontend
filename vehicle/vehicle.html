@@ -177,25 +177,25 @@
             <!-- Navigation Links -->
             <ul class="navbar-nav d-none d-md-flex gap-4 mx-5">
                 <li class="nav-item">
-                    <a class="nav-link text-muted fw-medium px-3 py-2" href="#">Dashboard</a>
+                    <a class="nav-link text-muted fw-medium px-3 py-2" href="../dashscreen.html">Dashboard</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-primary fw-medium px-3 py-2" href="#">Registration</a>
+                    <a class="nav-link text-primary fw-medium px-3 py-2" href="vehicle.html">Registration</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-muted fw-medium px-3 py-2" href="#">Slots</a>
+                    <a class="nav-link text-muted fw-medium px-3 py-2" href="../sign/sign.html">Sign-out</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link text-muted fw-medium px-3 py-2" href="#">Reports</a>
+                    <a class="nav-link text-muted fw-medium px-3 py-2" href="../reports2.html">Reports</a>
                 </li>
             </ul>
            
             <!-- Right Icons -->
             <div class="d-flex align-items-center gap-2">
-                <button class="btn btn-outline-primary btn-sm p-2 rounded-circle">
+                <button class="btn btn-outline-primary btn-sm p-2 rounded-circle" onclick="window.location.href='../dashscreen.html'">
                     <i class="bi bi-bell fs-5"></i>
                 </button>
-                <button class="btn btn-outline-primary btn-sm p-2 rounded-circle">
+                <button class="btn btn-outline-primary btn-sm p-2 rounded-circle" onclick="window.location.href='../admin.html'">
                     <i class="bi bi-gear fs-5"></i>
                 </button>
                 <div class="bg-primary p-2 rounded-circle" style="width: 45px; height: 45px;">
@@ -241,28 +241,28 @@
                         <label class="form-label fw-bold small mb-4">Vehicle Type</label>
                         <div class="row g-3">
                             <div class="col-6 col-lg-3">
-                                <div class="type-btn w-100 text-center checked">
+                                <div class="type-btn w-100 text-center checked" onclick="selectVehicleType(this)">
                                     <i class="bi bi-car-front-fill fs-1 text-primary mb-2 d-block"></i>
                                     <strong>Sedan</strong>
                                     <input type="radio" name="vtype" class="d-none" checked>
                                 </div>
                             </div>
                             <div class="col-6 col-lg-3">
-                                <div class="type-btn w-100 text-center">
+                                <div class="type-btn w-100 text-center" onclick="selectVehicleType(this)">
                                     <i class="bi bi-suvs-off-road-fill fs-1 text-muted mb-2 d-block"></i>
                                     <strong>SUV</strong>
                                     <input type="radio" name="vtype" class="d-none">
                                 </div>
                             </div>
                             <div class="col-6 col-lg-3">
-                                <div class="type-btn w-100 text-center">
+                                <div class="type-btn w-100 text-center" onclick="selectVehicleType(this)">
                                     <i class="bi bi-motorcycle fs-1 text-muted mb-2 d-block"></i>
                                     <strong>Motorcycle</strong>
                                     <input type="radio" name="vtype" class="d-none">
                                 </div>
                             </div>
                             <div class="col-6 col-lg-3">
-                                <div class="type-btn w-100 text-center">
+                                <div class="type-btn w-100 text-center" onclick="selectVehicleType(this)">
                                     <i class="bi bi-truck-flatbed fs-1 text-muted mb-2 d-block"></i>
                                     <strong>Van</strong>
                                     <input type="radio" name="vtype" class="d-none">
@@ -276,12 +276,12 @@
                         <div class="col-md-6">
                             <label class="form-label fw-bold small mb-3">Vehicle Color</label>
                             <div class="d-flex gap-2">
-                                <div class="color-picker" style="background: #1f2937;"></div>
-                                <div class="color-picker" style="background: white;"></div>
-                                <div class="color-picker" style="background: #6b7280;"></div>
-                                <div class="color-picker" style="background: #dc2626;"></div>
-                                <div class="color-picker" style="background: #2563eb;"></div>
-                                <div class="color-picker border border-primary" style="background: rgba(23,207,176,0.1);">
+                                <div class="color-picker" style="background: #1f2937;" onclick="selectColor(this)"></div>
+                                <div class="color-picker" style="background: white;" onclick="selectColor(this)"></div>
+                                <div class="color-picker" style="background: #6b7280;" onclick="selectColor(this)"></div>
+                                <div class="color-picker" style="background: #dc2626;" onclick="selectColor(this)"></div>
+                                <div class="color-picker" style="background: #2563eb;" onclick="selectColor(this)"></div>
+                                <div class="color-picker border border-primary" style="background: rgba(23,207,176,0.1);" onclick="selectColor(this)">
                                     <i class="bi bi-palette"></i>
                                 </div>
                             </div>
@@ -322,24 +322,24 @@
                            
                             <!-- Parking Slots (6x3 grid) -->
                             <div class="row g-2 h-100">
-                                <div class="col-2"><div class="slot available h-100" data-slot="A1">A1</div></div>
-                                <div class="col-2"><div class="slot occupied h-100" data-slot="A2">A2</div></div>
-                                <div class="col-2"><div class="slot selected h-100" data-slot="A3">A3</div></div>
-                                <div class="col-2"><div class="slot available h-100" data-slot="A4">A4</div></div>
-                                <div class="col-2"><div class="slot available h-100" data-slot="A5">A5</div></div>
-                                <div class="col-2"><div class="slot occupied h-100" data-slot="A6">A6</div></div>
-                                <div class="col-2"><div class="slot available h-100" data-slot="B1">B1</div></div>
-                                <div class="col-2"><div class="slot available h-100" data-slot="B2">B2</div></div>
-                                <div class="col-2"><div class="slot available h-100" data-slot="B3">B3</div></div>
-                                <div class="col-2"><div class="slot available h-100" data-slot="B4">B4</div></div>
-                                <div class="col-2"><div class="slot occupied h-100" data-slot="B5">B5</div></div>
-                                <div class="col-2"><div class="slot available h-100" data-slot="B6">B6</div></div>
-                                <div class="col-2"><div class="slot available h-100" data-slot="C1">C1</div></div>
-                                <div class="col-2"><div class="slot available h-100" data-slot="C2">C2</div></div>
-                                <div class="col-2"><div class="slot available h-100" data-slot="C3">C3</div></div>
-                                <div class="col-2"><div class="slot available h-100" data-slot="C4">C4</div></div>
-                                <div class="col-2"><div class="slot available h-100" data-slot="C5">C5</div></div>
-                                <div class="col-2"><div class="slot available h-100" data-slot="C6">C6</div></div>
+                                <div class="col-2"><div class="slot available h-100" data-slot="A1" onclick="selectSlot(this)">A1</div></div>
+                                <div class="col-2"><div class="slot occupied h-100" data-slot="A2" onclick="selectSlot(this)">A2</div></div>
+                                <div class="col-2"><div class="slot selected h-100" data-slot="A3" onclick="selectSlot(this)">A3</div></div>
+                                <div class="col-2"><div class="slot available h-100" data-slot="A4" onclick="selectSlot(this)">A4</div></div>
+                                <div class="col-2"><div class="slot available h-100" data-slot="A5" onclick="selectSlot(this)">A5</div></div>
+                                <div class="col-2"><div class="slot occupied h-100" data-slot="A6" onclick="selectSlot(this)">A6</div></div>
+                                <div class="col-2"><div class="slot available h-100" data-slot="B1" onclick="selectSlot(this)">B1</div></div>
+                                <div class="col-2"><div class="slot available h-100" data-slot="B2" onclick="selectSlot(this)">B2</div></div>
+                                <div class="col-2"><div class="slot available h-100" data-slot="B3" onclick="selectSlot(this)">B3</div></div>
+                                <div class="col-2"><div class="slot available h-100" data-slot="B4" onclick="selectSlot(this)">B4</div></div>
+                                <div class="col-2"><div class="slot occupied h-100" data-slot="B5" onclick="selectSlot(this)">B5</div></div>
+                                <div class="col-2"><div class="slot available h-100" data-slot="B6" onclick="selectSlot(this)">B6</div></div>
+                                <div class="col-2"><div class="slot available h-100" data-slot="C1" onclick="selectSlot(this)">C1</div></div>
+                                <div class="col-2"><div class="slot available h-100" data-slot="C2" onclick="selectSlot(this)">C2</div></div>
+                                <div class="col-2"><div class="slot available h-100" data-slot="C3" onclick="selectSlot(this)">C3</div></div>
+                                <div class="col-2"><div class="slot available h-100" data-slot="C4" onclick="selectSlot(this)">C4</div></div>
+                                <div class="col-2"><div class="slot available h-100" data-slot="C5" onclick="selectSlot(this)">C5</div></div>
+                                <div class="col-2"><div class="slot available h-100" data-slot="C6" onclick="selectSlot(this)">C6</div></div>
                             </div>
                         </div>
                     </div>
@@ -358,7 +358,7 @@
                 <div class="sidebar-card p-4 mb-4">
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <h3 class="h5 fw-bold mb-0">Recent Registrations</h3>
-                        <a href="#" class="text-primary small fw-bold text-decoration-none">View All</a>
+                        <a href="../reports2.html" class="text-primary small fw-bold text-decoration-none">View All</a>
                     </div>
                     <div class="space-y-3">
                         <div class="recent-item">
@@ -451,22 +451,63 @@
 
             if(registerBtn){
                 registerBtn.addEventListener('click', function(){
-                    window.location.href = 'dashboard.html';
+                    window.location.href = '../dashscreen.html';
                 });
             }
 
             if(upgradeBtn){
                 upgradeBtn.addEventListener('click', function(){
-                    window.location.href = 'register.html';
-                });
-            }
-
-               if(registerEntryBtn){
-                upgradeBtn.addEventListener('click', function(){
-                    window.location.href = 'register.html';
+                    window.location.href = '../register.html';
                 });
             }
         })();
+
+        function selectVehicleType(element) {
+            // Remove checked class from all type buttons
+            document.querySelectorAll('.type-btn').forEach(btn => {
+                btn.classList.remove('checked');
+                btn.querySelector('i').classList.remove('text-primary');
+                btn.querySelector('i').classList.add('text-muted');
+                btn.querySelector('input').checked = false;
+            });
+            // Add checked class to clicked one
+            element.classList.add('checked');
+            element.querySelector('i').classList.remove('text-muted');
+            element.querySelector('i').classList.add('text-primary');
+            element.querySelector('input').checked = true;
+        }
+
+        function selectColor(element) {
+            // Remove selected class from all color pickers
+            document.querySelectorAll('.color-picker').forEach(picker => {
+                picker.classList.remove('selected');
+                picker.style.border = '3px solid white';
+            });
+            // Add selected class to clicked one
+            element.classList.add('selected');
+            element.style.border = '3px solid var(--primary)';
+        }
+
+        function selectSlot(element) {
+            if (element.classList.contains('occupied')) return; // Can't select occupied slots
+            
+            // If already selected, deselect it
+            if (element.classList.contains('selected')) {
+                element.classList.remove('selected');
+                element.classList.add('available');
+                return;
+            }
+            
+            // Deselect any previously selected slot
+            document.querySelectorAll('.slot.selected').forEach(slot => {
+                slot.classList.remove('selected');
+                slot.classList.add('available');
+            });
+            
+            // Select this slot
+            element.classList.remove('available');
+            element.classList.add('selected');
+        }
     </script>
 </body>
 </html>
