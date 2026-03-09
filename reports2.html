@@ -1,546 +1,366 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>ParkEase Reports &amp; Analytics</title>
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
-      rel="stylesheet"
-    />
-    <script id="tailwind-config">
-      tailwind.config = {
-        darkMode: "class",
-        theme: {
-          extend: {
-            colors: {
-              primary: "#17cfb0",
-              "background-light": "#f6f8f8",
-              "background-dark": "#11211e",
-            },
-            fontFamily: {
-              display: ["Inter"],
-            },
-            borderRadius: {
-              DEFAULT: "0.25rem",
-              lg: "0.5rem",
-              xl: "0.75rem",
-              full: "9999px",
-            },
-          },
-        },
-      };
-    </script>
-  </head>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParkEase · Reports & Analytics</title>
 
-  <body
-    class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen"
-  >
-    <header
-      class="sticky top-0 z-50 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 py-3"
-    >
-      <div class="max-w-7xl mx-auto flex items-center justify-between">
-        <div class="flex items-center gap-8">
-          <div class="container-fluid">
-            <!-- Logo -->
-            <div class="d-flex align-items-center gap-3">
-                <div class="bg-primary text-white p-3 rounded-3 d-flex align-items-center justify-content-center" style="width: 45px; height: 45px;">
-                    <i class="bi bi-car-front-fill fs-3"></i>
+    <!-- Same fonts, icons and Tailwind config as dashboard -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#17cfb0",
+                        "background-light": "#f6f8f8",
+                        "background-dark": "#11211e",
+                    },
+                    fontFamily: {
+                        display: ["Inter"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.25rem",
+                        lg: "0.5rem",
+                        xl: "0.75rem",
+                        full: "9999px",
+                    },
+                },
+            },
+        };
+    </script>
+    <!-- Tiny extra style for sparkline (keeps visual consistent) -->
+    <style>
+        .trend-spark { fill: none; stroke: #17cfb0; stroke-width: 2; }
+        .trend-fill { fill: rgba(23,207,176,0.08); }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+
+    <!-- ========== TOP NAVIGATION (identical to dashboard.html) ========== -->
+    <header class="sticky top-0 z-50 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 py-3">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <!-- left: logo + brand -->
+            <div class="flex items-center gap-8">
+                <div class="flex items-center gap-2">
+                    <div class="bg-primary text-white p-1.5 rounded-lg flex items-center justify-center">
+                        <span class="material-symbols-outlined text-2xl">local_parking</span>
+                    </div>
+                    <h1 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">ParkEase</h1>
                 </div>
-                <div>
-                    <h2 class="mb-1 fw-bold fs-2">ParkEase</h2>
-                    <p class="mb-0 text-primary small fw-medium text-uppercase" style="letter-spacing: 2px;">Premium Parking</p>
+                <!-- nav links (active state on Reports) -->
+                <nav class="hidden md:flex items-center gap-1">
+                    <a href="dashboard.html" class="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary transition-colors">Dashboard</a>
+                    <a href="vehicle.html" class="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary transition-colors">Vehicles</a>
+                    <a href="reports2.html" class="px-4 py-2 text-sm font-medium text-primary bg-primary/10 rounded-lg">Reports</a>
+                    <!-- Revenue is now merged into Reports; keep for completeness but hide or keep as secondary? We'll keep one "Reports" active -->
+                    <a href="reports2.html" class="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary transition-colors">Revenue</a>
+                    <a href="settings.html" class="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary transition-colors">Settings</a>
+                </nav>
+            </div>
+            <!-- right icons + profile (exactly as dashboard) -->
+            <div class="flex items-center gap-4">
+                <div class="relative hidden sm:block">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl">search</span>
+                    <input class="pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary w-64" placeholder="Search reports..." type="text">
+                </div>
+                <button class="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg relative transition-colors" onclick="window.location.href='reports2.html'">
+                    <span class="material-symbols-outlined">notifications</span>
+                    <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-slate-900"></span>
+                </button>
+                <div class="h-8 w-px bg-slate-200 dark:bg-slate-800 mx-1"></div>
+                <div class="flex items-center gap-3 cursor-pointer group" onclick="window.location.href='admin.html'">
+                    <div class="text-right hidden sm:block">
+                        <p class="text-xs font-semibold">Admin User</p>
+                        <p class="text-[10px] text-slate-500 uppercase tracking-wider">Super Admin</p>
+                    </div>
+                    <img alt="User Profile" class="w-9 h-9 rounded-full bg-slate-200" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1JDEMPQE6Za5Iz_8vzKO6Cl71f0qm4KyPUH2gqQ7aQ7M3RGuPTWISJAP2MHjUqpKSDNsEQm_vsM7c3J24-agS9YmmDCc43-5P1o_baaBr4hlBgJJY1ZM88em4-jVv280SPvmuzIeduLTXmWmsXp9DbBZ3795nvifgN4ReMGkLWisPKiozdRZfY1O8S7qvHrdYV4llumshjZnv1-XJk_pNgS5SseFMN1ZAI1VdFJEW7UlSDDgv-dE-16Ny2HRt8mBvd1k5q5ioA8k">
                 </div>
             </div>
-          </div>
-          <nav class="hidden md:flex items-center gap-1">
-            <a
-              class="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary transition-colors"
-              href="dashscreen.html"
-              >Dashboard</a
-            >
-            <a
-              class="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary transition-colors"
-              href="vehicle/vehicle.html"
-              >Vehicles</a
-            >
-            <a
-              class="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary transition-colors"
-              href="reports2.html"
-              >Revenue</a
-            >
-            <a
-              class="px-4 py-2 text-sm font-medium text-primary bg-primary/10 rounded-lg"
-              href="reports2.html"
-              >Reports</a
-            >
-            <a
-              class="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary transition-colors"
-              href="settings.html"
-              >Settings</a
-            >
-          </nav>
         </div>
-        <div class="flex items-center gap-4">
-          <div class="relative hidden sm:block">
-            <span
-              class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl"
-              >search</span
-            >
-            <input
-              class="pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary w-64"
-              placeholder="Search reports..."
-              type="text"
-            />
-          </div>
-          <button
-            class="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg relative transition-colors"
-            onclick="window.location.href='admin.html'"
-          >
-            <span class="material-symbols-outlined">notifications</span>
-            <span
-              class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-slate-900"
-            ></span>
-          </button>
-          <div class="h-8 w-px bg-slate-200 dark:bg-slate-800 mx-1"></div>
-          <div class="flex items-center gap-3 cursor-pointer group" onclick="window.location.href='admin.html'">
-            <div class="text-right hidden sm:block">
-              <p class="text-xs font-semibold">Admin User</p>
-              <p class="text-[10px] text-slate-500 uppercase tracking-wider">
-                Super Admin
-              </p>
-            </div>
-            <img
-              alt="User Profile"
-              class="w-9 h-9 rounded-full bg-slate-200"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuA1JDEMPQE6Za5Iz_8vzKO6Cl71f0qm4KyPUH2gqQ7aQ7M3RGuPTWISJAP2MHjUqpKSDNsEQm_vsM7c3J24-agS9YmmDCc43-5P1o_baaBr4hlBgJJY1ZM88em4-jVv280SPvmuzIeduLTXmWmsXp9DbBZ3795nvifgN4ReMGkLWisPKiozdRZfY1O8S7qvHrdYV4llumshjZnv1-XJk_pNgS5SseFMN1ZAI1VdFJEW7UlSDDgv-dE-16Ny2HRt8mBvd1k5q5ioA8k"
-            />
-          </div>
-        </div>
-      </div>
     </header>
+
+    <!-- ========== MAIN CONTENT (max-w-7xl, same padding) ========== -->
     <main class="max-w-7xl mx-auto px-6 py-8">
-      <div
-        class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4"
-      >
-        <div>
-          <h2 class="text-2xl font-bold text-slate-900 dark:text-white">
-            Reports &amp; Analytics
-          </h2>
-          <p class="text-slate-500 dark:text-slate-400">
-            Deep dive into your parking performance data.
-          </p>
-        </div>
-        <div class="flex flex-wrap gap-3">
-          <div
-            class="flex items-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden"
-          >
-            <div
-              class="px-3 py-2 flex items-center gap-2 border-r border-slate-200 dark:border-slate-700"
-            >
-              <span class="material-symbols-outlined text-slate-400 text-lg"
-                >calendar_month</span
-              >
-              <span class="text-sm font-medium"
-                >Oct 01, 2024 - Oct 24, 2024</span
-              >
-            </div>
-            <button
-              class="px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors"
-              onclick="window.location.href='#'"
-            >
-              <span class="material-symbols-outlined text-lg text-slate-500"
-                >expand_more</span
-              >
-            </button>
-          </div>
-          <button
-            class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-semibold shadow-sm hover:opacity-90 transition-opacity"
-            onclick="window.location.href='reports2.html'"
-          >
-            <span class="material-symbols-outlined text-lg">download</span>
-            Download CSV
-          </button>
-        </div>
-      </div>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div
-          class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm"
-        >
-          <p class="text-slate-500 dark:text-slate-400 text-sm font-medium">
-            Total Revenue
-          </p>
-          <div class="flex items-baseline justify-between mt-1">
-            <h3 class="text-3xl font-bold text-slate-900 dark:text-white">
-              UGX 12.4M
-            </h3>
-            <span
-              class="text-emerald-500 text-xs font-bold flex items-center gap-1"
-            >
-              <span class="material-symbols-outlined text-xs">trending_up</span>
-              +8.4%
-            </span>
-          </div>
-          <div class="mt-4 flex items-center gap-2">
-            <div class="flex -space-x-1">
-              <div class="w-6 h-1 bg-primary rounded-full"></div>
-              <div class="w-6 h-1 bg-primary/20 rounded-full"></div>
-              <div class="w-6 h-1 bg-primary/20 rounded-full"></div>
-            </div>
-            <span
-              class="text-[10px] text-slate-400 uppercase font-bold tracking-wider"
-              >Target: 15M</span
-            >
-          </div>
-        </div>
-        <div
-          class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm"
-        >
-          <p class="text-slate-500 dark:text-slate-400 text-sm font-medium">
-            Average Parking Duration
-          </p>
-          <div class="flex items-baseline justify-between mt-1">
-            <h3 class="text-3xl font-bold text-slate-900 dark:text-white">
-              4h 12m
-            </h3>
-            <span
-              class="text-rose-500 text-xs font-bold flex items-center gap-1"
-            >
-              <span class="material-symbols-outlined text-xs">trending_up</span>
-              +12%
-            </span>
-          </div>
-          <p class="mt-4 text-xs text-slate-400 italic">
-            Common for: SUVs &amp; Wagons
-          </p>
-        </div>
-        <div
-          class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm"
-        >
-          <p class="text-slate-500 dark:text-slate-400 text-sm font-medium">
-            Busiest Day
-          </p>
-          <div class="flex items-baseline justify-between mt-1">
-            <h3 class="text-3xl font-bold text-slate-900 dark:text-white">
-              Friday
-            </h3>
-            <span
-              class="text-primary bg-primary/10 px-2 py-0.5 rounded text-[10px] font-bold"
-              >AVG. 182 CARS</span
-            >
-          </div>
-          <p class="mt-4 text-xs text-slate-400 italic">
-            Peak hour: 02:00 PM - 05:00 PM
-          </p>
-        </div>
-      </div>
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-        <div
-          class="lg:col-span-2 bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm"
-        >
-          <div class="flex items-center justify-between mb-8">
+
+        <!-- header with title + lead + date picker / export (exactly like dashboard) -->
+        <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
-              <h4 class="font-bold text-lg">Revenue Trends</h4>
-              <p class="text-sm text-slate-500">
-                Daily earnings over the selected period
-              </p>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Reports & Analytics</h2>
+                <p class="text-slate-500 dark:text-slate-400">Deep dive into your parking performance data.</p>
             </div>
-            <select
-              class="bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-xs font-semibold focus:ring-1 focus:ring-primary px-3 py-1.5"
-            >
-              <option>Weekly View</option>
-              <option>Monthly View</option>
-            </select>
-          </div>
-          <div class="h-64 flex flex-col justify-between">
-            <div class="flex-1 flex items-end gap-1">
-              <div
-                class="flex-1 h-full flex flex-col-reverse justify-between text-[10px] text-slate-400 pb-6 pr-2"
-              >
-                <span>0</span>
-                <span>500k</span>
-                <span>1M</span>
-                <span>1.5M</span>
-              </div>
-              <div
-                class="flex-[10] h-full relative border-l border-b border-slate-100 dark:border-slate-800"
-              >
-                <svg
-                  class="absolute inset-0 w-full h-full preserve-3d"
-                  preserveAspectRatio="none"
-                  viewBox="0 0 100 100"
-                >
-                  <path
-                    d="M 0 80 Q 15 70, 25 40 T 50 60 T 75 20 T 100 30"
-                    fill="none"
-                    stroke="#17cfb0"
-                    stroke-width="2"
-                    vector-effect="non-scaling-stroke"
-                  ></path>
-                  <path
-                    d="M 0 80 Q 15 70, 25 40 T 50 60 T 75 20 T 100 30 L 100 100 L 0 100 Z"
-                    fill="url(#gradient)"
-                    opacity="0.1"
-                  ></path>
-                  <defs>
-                    <linearGradient
-                      id="gradient"
-                      x1="0%"
-                      x2="0%"
-                      y1="0%"
-                      y2="100%"
-                    >
-                      <stop
-                        offset="0%"
-                        style="stop-color: #17cfb0; stop-opacity: 1"
-                      ></stop>
-                      <stop
-                        offset="100%"
-                        style="stop-color: #17cfb0; stop-opacity: 0"
-                      ></stop>
-                    </linearGradient>
-                  </defs>
-                </svg>
-                <div
-                  class="absolute bottom-[-24px] w-full flex justify-between text-[10px] text-slate-400"
-                >
-                  <span>Mon</span>
-                  <span>Tue</span>
-                  <span>Wed</span>
-                  <span>Thu</span>
-                  <span>Fri</span>
-                  <span>Sat</span>
-                  <span>Sun</span>
+            <div class="flex flex-wrap gap-3">
+                <!-- date range selector (like dashboard Today button) -->
+                <div class="flex items-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden">
+                    <div class="px-3 py-2 flex items-center gap-2 border-r border-slate-200 dark:border-slate-700">
+                        <span class="material-symbols-outlined text-slate-400 text-lg">calendar_month</span>
+                        <span class="text-sm font-medium">Oct 01, 2024 - Oct 24, 2024</span>
+                    </div>
+                    <button class="px-3 py-2 hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors" onclick="window.location.href='#'">
+                        <span class="material-symbols-outlined text-lg text-slate-500">expand_more</span>
+                    </button>
                 </div>
-              </div>
+                <!-- primary export button (exact dashboard style) -->
+                <button class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-semibold shadow-sm hover:opacity-90 transition-opacity" onclick="window.location.href='reports2.html'">
+                    <span class="material-symbols-outlined text-lg">download</span>
+                    Download CSV
+                </button>
             </div>
-          </div>
         </div>
-        <div
-          class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm"
-        >
-          <h4 class="font-bold text-lg mb-1">Revenue by Vehicle</h4>
-          <p class="text-sm text-slate-500 mb-8">
-            Segmented by vehicle category
-          </p>
-          <div class="space-y-6">
-            <div class="space-y-2">
-              <div class="flex justify-between text-sm">
-                <span class="font-medium">Saloon Cars</span>
-                <span class="text-slate-500">55%</span>
-              </div>
-              <div
-                class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden"
-              >
-                <div class="bg-primary h-full w-[55%]"></div>
-              </div>
+
+        <!-- METRIC CARDS (3 columns, exactly like dashboard metric grid) -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <!-- Total Revenue card -->
+            <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                <p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Total Revenue</p>
+                <div class="flex items-baseline justify-between mt-1">
+                    <h3 class="text-3xl font-bold text-slate-900 dark:text-white">UGX 12.4M</h3>
+                    <span class="text-emerald-500 text-xs font-bold flex items-center gap-1">
+                        <span class="material-symbols-outlined text-xs">trending_up</span> +8.4%
+                    </span>
+                </div>
+                <!-- tiny progress indicator (like dashboard) -->
+                <div class="mt-4 flex items-center gap-2">
+                    <div class="flex -space-x-1">
+                        <div class="w-6 h-1 bg-primary rounded-full"></div>
+                        <div class="w-6 h-1 bg-primary/20 rounded-full"></div>
+                        <div class="w-6 h-1 bg-primary/20 rounded-full"></div>
+                    </div>
+                    <span class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Target: 15M</span>
+                </div>
             </div>
-            <div class="space-y-2">
-              <div class="flex justify-between text-sm">
-                <span class="font-medium">SUVs / Trucks</span>
-                <span class="text-slate-500">30%</span>
-              </div>
-              <div
-                class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden"
-              >
-                <div class="bg-primary opacity-70 h-full w-[30%]"></div>
-              </div>
+            <!-- Average Parking Duration card -->
+            <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                <p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Average Parking Duration</p>
+                <div class="flex items-baseline justify-between mt-1">
+                    <h3 class="text-3xl font-bold text-slate-900 dark:text-white">4h 12m</h3>
+                    <span class="text-rose-500 text-xs font-bold flex items-center gap-1">
+                        <span class="material-symbols-outlined text-xs">trending_up</span> +12%
+                    </span>
+                </div>
+                <p class="mt-4 text-xs text-slate-400 italic">Common for: SUVs & Wagons</p>
             </div>
-            <div class="space-y-2">
-              <div class="flex justify-between text-sm">
-                <span class="font-medium">Motorcycles</span>
-                <span class="text-slate-500">10%</span>
-              </div>
-              <div
-                class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden"
-              >
-                <div class="bg-primary opacity-40 h-full w-[10%]"></div>
-              </div>
+            <!-- Busiest Day card -->
+            <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                <p class="text-slate-500 dark:text-slate-400 text-sm font-medium">Busiest Day</p>
+                <div class="flex items-baseline justify-between mt-1">
+                    <h3 class="text-3xl font-bold text-slate-900 dark:text-white">Friday</h3>
+                    <span class="text-primary bg-primary/10 px-2 py-0.5 rounded text-[10px] font-bold">AVG. 182 CARS</span>
+                </div>
+                <p class="mt-4 text-xs text-slate-400 italic">Peak hour: 02:00 PM - 05:00 PM</p>
             </div>
-            <div class="space-y-2">
-              <div class="flex justify-between text-sm">
-                <span class="font-medium">Buses</span>
-                <span class="text-slate-500">5%</span>
-              </div>
-              <div
-                class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden"
-              >
-                <div class="bg-primary opacity-20 h-full w-[5%]"></div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="mt-10 pt-6 border-t border-slate-100 dark:border-slate-800"
-          >
-            <div
-              class="flex items-center justify-between text-xs text-slate-500"
-            >
-              <div class="flex items-center gap-1">
-                <span class="w-2 h-2 rounded-full bg-primary"></span> Primary
-                Source
-              </div>
-              <button class="text-primary font-semibold hover:underline" onclick="window.location.href='#'">
-                Details
-              </button>
-            </div>
-          </div>
         </div>
-      </div>
-      <div
-        class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden"
-      >
-        <div
-          class="px-6 py-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between"
-        >
-          <div>
-            <h4 class="font-bold text-lg">Top 5 Most Used Slots</h4>
-            <p class="text-sm text-slate-500">
-              Identify high-traffic parking areas
-            </p>
-          </div>
-          <button class="text-primary text-sm font-semibold hover:underline" onclick="window.location.href='#'">
-            View Heatmap
-          </button>
+
+        <!-- TWO-COLUMN LAYOUT (exact dashboard style: left 2/3, right 1/3) -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+            <!-- LEFT (span 2) : Revenue Trends graph -->
+            <div class="lg:col-span-2 bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                <div class="flex items-center justify-between mb-8">
+                    <div>
+                        <h4 class="font-bold text-lg">Revenue Trends</h4>
+                        <p class="text-sm text-slate-500">Daily earnings over the selected period</p>
+                    </div>
+                    <select class="bg-slate-50 dark:bg-slate-800 border-none rounded-lg text-xs font-semibold focus:ring-1 focus:ring-primary px-3 py-1.5">
+                        <option>Weekly View</option>
+                        <option>Monthly View</option>
+                    </select>
+                </div>
+                <!-- simplified sparkline / chart area (keeps aesthetic) -->
+                <div class="h-64 flex flex-col justify-between">
+                    <div class="flex-1 flex items-end gap-1">
+                        <div class="flex-1 h-full flex flex-col-reverse justify-between text-[10px] text-slate-400 pb-6 pr-2">
+                            <span>0</span><span>500k</span><span>1M</span><span>1.5M</span>
+                        </div>
+                        <!-- chart container with inline SVG wave (same as reports2 but refined) -->
+                        <div class="flex-[10] h-full relative border-l border-b border-slate-100 dark:border-slate-800">
+                            <svg class="absolute inset-0 w-full h-full" preserveAspectRatio="none" viewBox="0 0 100 100">
+                                <path d="M 0 80 Q 15 70, 25 40 T 50 60 T 75 20 T 100 30" class="trend-spark" vector-effect="non-scaling-stroke" />
+                                <path d="M 0 80 Q 15 70, 25 40 T 50 60 T 75 20 T 100 30 L 100 100 L 0 100 Z" class="trend-fill" />
+                            </svg>
+                            <!-- day labels -->
+                            <div class="absolute bottom-[-24px] w-full flex justify-between text-[10px] text-slate-400">
+                                <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT (1/3) : Revenue by Vehicle (like quick actions style but with data) -->
+            <div class="bg-white dark:bg-slate-900 p-6 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm">
+                <h4 class="font-bold text-lg mb-1">Revenue by Vehicle</h4>
+                <p class="text-sm text-slate-500 mb-8">Segmented by vehicle category</p>
+                <div class="space-y-6">
+                    <!-- saloon -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-sm">
+                            <span class="font-medium">Saloon Cars</span>
+                            <span class="text-slate-500">55%</span>
+                        </div>
+                        <div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                            <div class="bg-primary h-full w-[55%]"></div>
+                        </div>
+                    </div>
+                    <!-- SUVs -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-sm">
+                            <span class="font-medium">SUVs / Trucks</span>
+                            <span class="text-slate-500">30%</span>
+                        </div>
+                        <div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                            <div class="bg-primary opacity-70 h-full w-[30%]"></div>
+                        </div>
+                    </div>
+                    <!-- Motorcycles -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-sm">
+                            <span class="font-medium">Motorcycles</span>
+                            <span class="text-slate-500">10%</span>
+                        </div>
+                        <div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                            <div class="bg-primary opacity-40 h-full w-[10%]"></div>
+                        </div>
+                    </div>
+                    <!-- Buses -->
+                    <div class="space-y-2">
+                        <div class="flex justify-between text-sm">
+                            <span class="font-medium">Buses</span>
+                            <span class="text-slate-500">5%</span>
+                        </div>
+                        <div class="w-full bg-slate-100 dark:bg-slate-800 h-2 rounded-full overflow-hidden">
+                            <div class="bg-primary opacity-20 h-full w-[5%]"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- footer link (like "Details" in dashboard) -->
+                <div class="mt-10 pt-6 border-t border-slate-100 dark:border-slate-800">
+                    <div class="flex items-center justify-between text-xs text-slate-500">
+                        <div class="flex items-center gap-1">
+                            <span class="w-2 h-2 rounded-full bg-primary"></span> Primary Source
+                        </div>
+                        <button class="text-primary font-semibold hover:underline" onclick="window.location.href='details.html'">Details</button>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-left">
-            <thead
-              class="bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider"
-            >
-              <tr>
-                <th class="px-6 py-4">Slot ID</th>
-                <th class="px-6 py-4">Location</th>
-                <th class="px-6 py-4">Occupancy Rate</th>
-                <th class="px-6 py-4">Avg. Turnover</th>
-                <th class="px-6 py-4 text-right">Trend</th>
-              </tr>
-            </thead>
-            <tbody
-              class="divide-y divide-slate-100 dark:divide-slate-800 text-sm font-medium"
-            >
-              <tr>
-                <td class="px-6 py-4">A-12</td>
-                <td class="px-6 py-4 text-slate-500">
-                  Near Entrance (Level 1)
-                </td>
-                <td class="px-6 py-4">
-                  <div class="flex items-center gap-2">
-                    <span class="w-12 text-right">92%</span>
-                    <div
-                      class="w-16 h-1.5 bg-slate-100 rounded-full overflow-hidden"
-                    >
-                      <div class="bg-primary h-full w-[92%]"></div>
-                    </div>
-                  </div>
-                </td>
-                <td class="px-6 py-4 text-slate-500">1.5h per car</td>
-                <td class="px-6 py-4 text-right text-emerald-500">
-                  <span class="material-symbols-outlined">trending_up</span>
-                </td>
-              </tr>
-              <tr>
-                <td class="px-6 py-4">B-04</td>
-                <td class="px-6 py-4 text-slate-500">Premium Zone (Level 1)</td>
-                <td class="px-6 py-4">
-                  <div class="flex items-center gap-2">
-                    <span class="w-12 text-right">88%</span>
-                    <div
-                      class="w-16 h-1.5 bg-slate-100 rounded-full overflow-hidden"
-                    >
-                      <div class="bg-primary h-full w-[88%]"></div>
-                    </div>
-                  </div>
-                </td>
-                <td class="px-6 py-4 text-slate-500">2.1h per car</td>
-                <td class="px-6 py-4 text-right text-emerald-500">
-                  <span class="material-symbols-outlined">trending_up</span>
-                </td>
-              </tr>
-              <tr>
-                <td class="px-6 py-4">A-01</td>
-                <td class="px-6 py-4 text-slate-500">
-                  Elevator Access (Level 1)
-                </td>
-                <td class="px-6 py-4">
-                  <div class="flex items-center gap-2">
-                    <span class="w-12 text-right">85%</span>
-                    <div
-                      class="w-16 h-1.5 bg-slate-100 rounded-full overflow-hidden"
-                    >
-                      <div class="bg-primary h-full w-[85%]"></div>
-                    </div>
-                  </div>
-                </td>
-                <td class="px-6 py-4 text-slate-500">3.0h per car</td>
-                <td class="px-6 py-4 text-right text-slate-400">
-                  <span class="material-symbols-outlined">trending_flat</span>
-                </td>
-              </tr>
-              <tr>
-                <td class="px-6 py-4">C-18</td>
-                <td class="px-6 py-4 text-slate-500">Corner Wing (Level 2)</td>
-                <td class="px-6 py-4">
-                  <div class="flex items-center gap-2">
-                    <span class="w-12 text-right">79%</span>
-                    <div
-                      class="w-16 h-1.5 bg-slate-100 rounded-full overflow-hidden"
-                    >
-                      <div class="bg-primary h-full w-[79%]"></div>
-                    </div>
-                  </div>
-                </td>
-                <td class="px-6 py-4 text-slate-500">4.2h per car</td>
-                <td class="px-6 py-4 text-right text-emerald-500">
-                  <span class="material-symbols-outlined">trending_up</span>
-                </td>
-              </tr>
-              <tr>
-                <td class="px-6 py-4">A-02</td>
-                <td class="px-6 py-4 text-slate-500">
-                  Near Entrance (Level 1)
-                </td>
-                <td class="px-6 py-4">
-                  <div class="flex items-center gap-2">
-                    <span class="w-12 text-right">74%</span>
-                    <div
-                      class="w-16 h-1.5 bg-slate-100 rounded-full overflow-hidden"
-                    >
-                      <div class="bg-primary h-full w-[74%]"></div>
-                    </div>
-                  </div>
-                </td>
-                <td class="px-6 py-4 text-slate-500">1.8h per car</td>
-                <td class="px-6 py-4 text-right text-rose-500">
-                  <span class="material-symbols-outlined">trending_down</span>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+
+        <!-- BOTTOM CARD: Top 5 most used slots (exactly as dashboard recent activity table) -->
+        <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden">
+            <div class="px-6 py-5 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                <div>
+                    <h4 class="font-bold text-lg">Top 5 Most Used Slots</h4>
+                    <p class="text-sm text-slate-500">Identify high-traffic parking areas</p>
+                </div>
+                <button class="text-primary text-sm font-semibold hover:underline" onclick="window.location.href='visualization.html'">View Heatmap</button>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead class="bg-slate-50 dark:bg-slate-800/50 text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider">
+                        <tr>
+                            <th class="px-6 py-4">Slot ID</th>
+                            <th class="px-6 py-4">Location</th>
+                            <th class="px-6 py-4">Occupancy Rate</th>
+                            <th class="px-6 py-4">Avg. Turnover</th>
+                            <th class="px-6 py-4 text-right">Trend</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-800 text-sm font-medium">
+                        <tr>
+                            <td class="px-6 py-4">A-12</td>
+                            <td class="px-6 py-4 text-slate-500">Near Entrance (Level 1)</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-12 text-right">92%</span>
+                                    <div class="w-16 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                        <div class="bg-primary h-full w-[92%]"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-slate-500">1.5h per car</td>
+                            <td class="px-6 py-4 text-right text-emerald-500"><span class="material-symbols-outlined">trending_up</span></td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4">B-04</td>
+                            <td class="px-6 py-4 text-slate-500">Premium Zone (Level 1)</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-12 text-right">88%</span>
+                                    <div class="w-16 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                        <div class="bg-primary h-full w-[88%]"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-slate-500">2.1h per car</td>
+                            <td class="px-6 py-4 text-right text-emerald-500"><span class="material-symbols-outlined">trending_up</span></td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4">A-01</td>
+                            <td class="px-6 py-4 text-slate-500">Elevator Access (Level 1)</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-12 text-right">85%</span>
+                                    <div class="w-16 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                        <div class="bg-primary h-full w-[85%]"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-slate-500">3.0h per car</td>
+                            <td class="px-6 py-4 text-right text-slate-400"><span class="material-symbols-outlined">trending_flat</span></td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4">C-18</td>
+                            <td class="px-6 py-4 text-slate-500">Corner Wing (Level 2)</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-12 text-right">79%</span>
+                                    <div class="w-16 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                        <div class="bg-primary h-full w-[79%]"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-slate-500">4.2h per car</td>
+                            <td class="px-6 py-4 text-right text-emerald-500"><span class="material-symbols-outlined">trending_up</span></td>
+                        </tr>
+                        <tr>
+                            <td class="px-6 py-4">A-02</td>
+                            <td class="px-6 py-4 text-slate-500">Near Entrance (Level 1)</td>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-12 text-right">74%</span>
+                                    <div class="w-16 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+                                        <div class="bg-primary h-full w-[74%]"></div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-slate-500">1.8h per car</td>
+                            <td class="px-6 py-4 text-right text-rose-500"><span class="material-symbols-outlined">trending_down</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-      </div>
     </main>
-    <footer
-      class="max-w-7xl mx-auto px-6 py-12 border-t border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 text-sm flex flex-col md:flex-row justify-between gap-4"
-    >
-      <div>
-        <p>© 2024 ParkEase Management Solutions. All rights reserved.</p>
-      </div>
-      <div class="flex gap-6">
-        <a class="hover:text-primary transition-colors" href="reports2.html"
-          >Support Center</a
-        >
-        <a class="hover:text-primary transition-colors" href="terms-and-policy.html"
-          >Privacy Policy</a
-        >
-        <a class="hover:text-primary transition-colors" href="terms-and-policy.html"
-          >Terms of Service</a
-        >
-      </div>
+
+    <!-- ========== FOOTER (identical to dashboard) ========== -->
+    <footer class="max-w-7xl mx-auto px-6 py-12 border-t border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 text-sm flex flex-col md:flex-row justify-between gap-4">
+        <div>© 2024 ParkEase Management Solutions. All rights reserved.</div>
+        <div class="flex gap-6">
+            <a href="settings.html" class="hover:text-primary transition-colors">Support Center</a>
+            <a href="terms-and-policy.html" class="hover:text-primary transition-colors">Privacy Policy</a>
+            <a href="terms-and-policy.html" class="hover:text-primary transition-colors">Terms of Service</a>
+        </div>
     </footer>
-  </body>
+
+    <!-- simple script to handle any interactive bits (optional) -->
+    <script>
+        // keep all original behaviour (reports links, etc) intact, but we don't need much
+        document.querySelectorAll('button[onclick]').forEach(btn => {
+            // already defined, leave as is
+        });
+    </script>
+</body>
 </html>

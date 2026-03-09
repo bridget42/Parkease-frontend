@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParkEase · Vehicle Registration</title>
+
+    <!-- Same font & icons as dashboard -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+    <!-- Tailwind (exact config from dashboard) -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#17cfb0",
+                        "background-light": "#f6f8f8",
+                        "background-dark": "#11211e",
+                    },
+                    fontFamily: {
+                        display: ["Inter"],
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.25rem",
+                        lg: "0.5rem",
+                        xl: "0.75rem",
+                        full: "9999px",
+                    },
+                },
+            },
+        };
+    </script>
+
+    <!-- tiny extra utilities for slot grid (keeps same design language) -->
+    <style>
+        .slot {
+            transition: all 0.15s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.75rem;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        .slot.available {
+            background-color: rgba(23,207,176,0.12);
+            color: #1e293b;
+        }
+        .slot.available:hover {
+            background-color: rgba(23,207,176,0.25);
+        }
+        .slot.occupied {
+            background-color: #e2e8f0;
+            color: #94a3b8;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .slot.selected {
+            background-color: #17cfb0;
+            color: white;
+            border-color: #17cfb0;
+            box-shadow: 0 8px 15px -6px rgba(23,207,176,0.5);
+            transform: scale(1.02);
+        }
+        .type-option {
+            transition: all 0.2s;
+            border: 2px solid #e2e8f0;
+            border-radius: 1rem;
+            padding: 1rem 0.5rem;
+            cursor: pointer;
+        }
+        .type-option.checked {
+            border-color: #17cfb0;
+            background-color: rgba(23,207,176,0.06);
+        }
+        .color-dot {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 9999px;
+            border: 3px solid white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: all 0.15s;
+            cursor: pointer;
+        }
+        .color-dot.selected {
+            box-shadow: 0 0 0 3px #17cfb0;
+        }
+        .recent-item {
+            transition: background 0.2s;
+            border-radius: 1rem;
+            padding: 0.75rem;
+        }
+        .recent-item:hover {
+            background-color: rgba(23,207,176,0.04);
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen">
+
+    <!-- ========== TOP NAVIGATION (identical to dashboard.html) ========== -->
+    <header class="sticky top-0 z-50 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 py-3">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <!-- left: logo + brand -->
+            <div class="flex items-center gap-8">
+                <div class="flex items-center gap-2">
+                    <div class="bg-primary text-white p-1.5 rounded-lg flex items-center justify-center">
+                        <span class="material-symbols-outlined text-2xl">local_parking</span>
+                    </div>
+                    <h1 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">ParkEase</h1>
+                </div>
+                <!-- nav links (active on Vehicles/Registration) -->
+                <nav class="hidden md:flex items-center gap-1">
+                    <a href="dashboard.html" class="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary transition-colors">Dashboard</a>
+                    <!-- active link -->
+                    <a href="vehicle.html" class="px-4 py-2 text-sm font-medium text-primary bg-primary/10 rounded-lg">Vehicles</a>
+                    <a href="reports2.html" class="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary transition-colors">Revenue</a>
+                    <a href="reports2.html" class="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary transition-colors">Reports</a>
+                    <a href="settings.html" class="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary transition-colors">Settings</a>
+                </nav>
+            </div>
+            <!-- right icons + profile (exactly as dashboard) -->
+            <div class="flex items-center gap-4">
+                <div class="relative hidden sm:block">
+                    <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl">search</span>
+                    <input class="pl-10 pr-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-lg text-sm focus:ring-2 focus:ring-primary w-64" placeholder="Search vehicle or slot..." type="text">
+                </div>
+                <button class="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg relative transition-colors" onclick="window.location.href='reports2.html'">
+                    <span class="material-symbols-outlined">notifications</span>
+                    <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-slate-900"></span>
+                </button>
+                <div class="h-8 w-px bg-slate-200 dark:bg-slate-800 mx-1"></div>
+                <div class="flex items-center gap-3 cursor-pointer group" onclick="window.location.href='admin.html'">
+                    <div class="text-right hidden sm:block">
+                        <p class="text-xs font-semibold">Admin User</p>
+                        <p class="text-[10px] text-slate-500 uppercase tracking-wider">Super Admin</p>
+                    </div>
+                    <img alt="User" class="w-9 h-9 rounded-full bg-slate-200" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPeUgXPsYwwnJqe8v1JdIZsPdtq5NypEuZ2GscI7ztzkhs7_Aok-3CJssPG2jK_bwEymC_dGtRHNw2h2W9PWcy5N-_s1_ny7rfk3PGbYdRkgCaz8X2hBIwUZ1U3Pr1eoQ35JZ2_7D-5PIlU2VZViJPXlSkyOT7q7rFSKLk-ZzDF76azZM23Bz0GP5jFZafu44pGiulhqzxVMBIVBaalRfi2pxqi8RDfIDEajsuGp2wupv46oP58JJEScg8fm_bRB7dWkyybunp0F8">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ========== MAIN CONTENT (max-w-7xl, same padding as dashboard) ========== -->
+    <main class="max-w-7xl mx-auto px-6 py-8">
+
+        <!-- header with title + lead (matches dashboard tone) -->
+        <div class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+                <h2 class="text-2xl font-bold text-slate-900 dark:text-white">Vehicle Registration</h2>
+                <p class="text-slate-500 dark:text-slate-400">Enter vehicle details to secure a parking session.</p>
+            </div>
+            <!-- small date indicator, like dashboard button style -->
+            <div class="flex gap-3">
+                <button class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors" onclick="window.location.href='reports2.html'">
+                    <span class="material-symbols-outlined text-lg">calendar_today</span>
+                    Today, Oct 24
+                </button>
+            </div>
+        </div>
+
+        <!-- TWO COLUMN LAYOUT: left 2/3 form, right 1/3 sidebar (exact dashboard grid) -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- LEFT (MAIN FORM) COLUMN (span 2) -->
+            <div class="lg:col-span-2 space-y-6">
+
+                <!-- MAIN REGISTRATION CARD (uses dashboard card styling) -->
+                <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden p-6 md:p-8">
+                    
+                    <!-- Plate & Model (2 cols) -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-7">
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Plate Number</label>
+                            <div class="relative">
+                                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl">directions_car</span>
+                                <input type="text" class="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-primary focus:border-transparent" placeholder="ABC-1234" style="font-family: monospace; text-transform: uppercase; letter-spacing: 1px;">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-2">Vehicle Model</label>
+                            <div class="relative">
+                                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl">badge</span>
+                                <input type="text" class="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm focus:ring-2 focus:ring-primary" placeholder="e.g. Toyota Camry">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Vehicle Type (4 icons, like dashboard quick actions but grid) -->
+                    <div class="mb-7">
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">Vehicle Type</label>
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                            <div class="type-option checked flex flex-col items-center" onclick="selectType(this)">
+                                <span class="material-symbols-outlined text-3xl text-primary mb-1">sedan</span>
+                                <span class="text-xs font-medium">Sedan</span>
+                                <input type="radio" name="vtype" class="hidden" checked>
+                            </div>
+                            <div class="type-option flex flex-col items-center" onclick="selectType(this)">
+                                <span class="material-symbols-outlined text-3xl text-slate-500 mb-1">suv</span>
+                                <span class="text-xs font-medium">SUV</span>
+                                <input type="radio" name="vtype" class="hidden">
+                            </div>
+                            <div class="type-option flex flex-col items-center" onclick="selectType(this)">
+                                <span class="material-symbols-outlined text-3xl text-slate-500 mb-1">motorcycle</span>
+                                <span class="text-xs font-medium">Motorcycle</span>
+                                <input type="radio" name="vtype" class="hidden">
+                            </div>
+                            <div class="type-option flex flex-col items-center" onclick="selectType(this)">
+                                <span class="material-symbols-outlined text-3xl text-slate-500 mb-1">van</span>
+                                <span class="text-xs font-medium">Van</span>
+                                <input type="radio" name="vtype" class="hidden">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Color & Duration -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
+                        <!-- Color picker (flex) -->
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">Vehicle Color</label>
+                            <div class="flex flex-wrap items-center gap-2">
+                                <div class="color-dot selected" style="background:#1f2937;" onclick="selectColor(this)"></div>
+                                <div class="color-dot" style="background:#ffffff; border:2px solid #cbd5e1;" onclick="selectColor(this)"></div>
+                                <div class="color-dot" style="background:#6b7280;" onclick="selectColor(this)"></div>
+                                <div class="color-dot" style="background:#dc2626;" onclick="selectColor(this)"></div>
+                                <div class="color-dot" style="background:#2563eb;" onclick="selectColor(this)"></div>
+                                <div class="color-dot" style="background: linear-gradient(45deg, #fbbf24, #ec4899);" onclick="selectColor(this)"></div>
+                            </div>
+                        </div>
+                        <!-- Duration dropdown -->
+                        <div>
+                            <label class="block text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3">Duration</label>
+                            <div class="relative">
+                                <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl">schedule</span>
+                                <select class="w-full pl-11 pr-8 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm appearance-none focus:ring-2 focus:ring-primary">
+                                    <option>Short Stay (0-4 hours)</option>
+                                    <option>Daily Pass (24 hours)</option>
+                                    <option>Overnight</option>
+                                    <option>Weekly Reservation</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PARKING SLOT GRID (styled like dashboard live map) -->
+                    <div class="mb-8">
+                        <div class="flex items-center justify-between mb-4">
+                            <label class="text-xs font-semibold uppercase tracking-wider text-slate-500">Slot selection · Zone A</label>
+                            <span class="inline-flex items-center gap-1 text-xs bg-primary/10 text-primary px-3 py-1 rounded-full">Level 1</span>
+                        </div>
+                        <div class="bg-slate-100 dark:bg-slate-800/60 rounded-xl p-4 border border-slate-200 dark:border-slate-700 relative">
+                            <!-- legend (floating) -->
+                            <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-white dark:bg-slate-900 px-4 py-1.5 rounded-full shadow-sm border border-slate-200 dark:border-slate-700 flex gap-4 z-10 text-[10px] font-semibold">
+                                <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-primary/40"></span> Available</span>
+                                <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-slate-400"></span> Occupied</span>
+                                <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-full bg-primary"></span> Selected</span>
+                            </div>
+                            <!-- 6x3 grid of slots -->
+                            <div class="grid grid-cols-6 gap-2 pt-6">
+                                <!-- generate slots with some occupied/available/selected (A3 selected) -->
+                                <div class="slot available" onclick="selectSlot(this)">A1</div>
+                                <div class="slot occupied" onclick="selectSlot(this)">A2</div>
+                                <div class="slot selected" onclick="selectSlot(this)">A3</div>
+                                <div class="slot available" onclick="selectSlot(this)">A4</div>
+                                <div class="slot available" onclick="selectSlot(this)">A5</div>
+                                <div class="slot occupied" onclick="selectSlot(this)">A6</div>
+                                <div class="slot available" onclick="selectSlot(this)">B1</div>
+                                <div class="slot available" onclick="selectSlot(this)">B2</div>
+                                <div class="slot available" onclick="selectSlot(this)">B3</div>
+                                <div class="slot available" onclick="selectSlot(this)">B4</div>
+                                <div class="slot occupied" onclick="selectSlot(this)">B5</div>
+                                <div class="slot available" onclick="selectSlot(this)">B6</div>
+                                <div class="slot available" onclick="selectSlot(this)">C1</div>
+                                <div class="slot available" onclick="selectSlot(this)">C2</div>
+                                <div class="slot available" onclick="selectSlot(this)">C3</div>
+                                <div class="slot available" onclick="selectSlot(this)">C4</div>
+                                <div class="slot available" onclick="selectSlot(this)">C5</div>
+                                <div class="slot available" onclick="selectSlot(this)">C6</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Register button (like dashboard CTA) -->
+                    <button id="registerBtn" class="w-full flex items-center justify-center gap-3 py-4 bg-primary text-white rounded-xl text-base font-bold shadow-lg shadow-primary/30 hover:opacity-90 transition-all">
+                        <span class="material-symbols-outlined">check_circle</span> Register Entry
+                    </button>
+                </div>
+            </div>
+
+            <!-- RIGHT SIDEBAR (1/3) — exactly dashboard quick actions style -->
+            <div class="space-y-6">
+
+                <!-- Recent registrations card -->
+                <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm p-6">
+                    <div class="flex items-center justify-between mb-5">
+                        <h4 class="font-bold text-lg">Recent Registrations</h4>
+                        <button class="text-primary text-sm font-semibold hover:underline" onclick="window.location.href='reports2.html'">View All</button>
+                    </div>
+                    <div class="space-y-2">
+                        <div class="recent-item flex items-center gap-3 cursor-pointer">
+                            <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                                <span class="material-symbols-outlined">directions_car</span>
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-semibold text-sm">NYK-2023</p>
+                                <p class="text-xs text-slate-500">Sedan · Slot B2</p>
+                            </div>
+                            <span class="text-[10px] text-slate-400">10m ago</span>
+                        </div>
+                        <div class="recent-item flex items-center gap-3 cursor-pointer">
+                            <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                                <span class="material-symbols-outlined">motorcycle</span>
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-semibold text-sm">MOTO-45</p>
+                                <p class="text-xs text-slate-500">Bike · Slot A12</p>
+                            </div>
+                            <span class="text-[10px] text-slate-400">24m ago</span>
+                        </div>
+                        <div class="recent-item flex items-center gap-3 cursor-pointer">
+                            <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                                <span class="material-symbols-outlined">suv</span>
+                            </div>
+                            <div class="flex-1">
+                                <p class="font-semibold text-sm">VAN-7890</p>
+                                <p class="text-xs text-slate-500">SUV · Slot D5</p>
+                            </div>
+                            <span class="text-[10px] text-slate-400">1h ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Membership upgrade card (similar to occupancy card but softer) -->
+                <div class="bg-gradient-to-br from-primary/5 to-transparent dark:from-primary/10 rounded-xl border border-primary/20 p-6 relative overflow-hidden">
+                    <div class="absolute -right-6 -top-6 w-28 h-28 bg-primary/10 rounded-full blur-2xl"></div>
+                    <div class="relative z-10">
+                        <span class="material-symbols-outlined text-primary text-3xl mb-2">workspace_premium</span>
+                        <h4 class="font-bold text-lg mb-1">Membership Status</h4>
+                        <p class="text-sm text-slate-600 dark:text-slate-400 mb-5">Upgrade to ParkEase Pro for discounted rates and priority slots.</p>
+                        <button id="upgradeBtn" class="w-full bg-primary text-white py-3 rounded-lg font-semibold text-sm shadow-md hover:opacity-90 transition">Upgrade Now</button>
+                    </div>
+                </div>
+
+                <!-- Current location (like a compact quick action) -->
+                <div class="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-5 flex items-center gap-4">
+                    <div class="w-11 h-11 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500">
+                        <span class="material-symbols-outlined">location_on</span>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Current location</p>
+                        <p class="font-semibold">Downtown Central Parking</p>
+                    </div>
+                    <span class="material-symbols-outlined text-primary">check_circle</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER (exactly as dashboard) -->
+    <footer class="max-w-7xl mx-auto px-6 py-12 border-t border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 text-sm flex flex-col md:flex-row justify-between gap-4">
+        <div>© 2024 ParkEase Management Solutions. All rights reserved.</div>
+        <div class="flex gap-6">
+            <a href="settings.html" class="hover:text-primary transition-colors">Support Center</a>
+            <a href="terms-and-policy.html" class="hover:text-primary transition-colors">Privacy Policy</a>
+            <a href="terms-and-policy.html" class="hover:text-primary transition-colors">Terms of Service</a>
+        </div>
+    </footer>
+
+    <!-- Simple javascript for interactive components (type, color, slot) -->
+    <script>
+        // Type selection
+        window.selectType = function(el) {
+            document.querySelectorAll('.type-option').forEach(opt => {
+                opt.classList.remove('checked');
+                opt.querySelector('.material-symbols-outlined').classList.remove('text-primary');
+                opt.querySelector('.material-symbols-outlined').classList.add('text-slate-500');
+                opt.querySelector('input').checked = false;
+            });
+            el.classList.add('checked');
+            el.querySelector('.material-symbols-outlined').classList.remove('text-slate-500');
+            el.querySelector('.material-symbols-outlined').classList.add('text-primary');
+            el.querySelector('input').checked = true;
+        };
+
+        // Color selection
+        window.selectColor = function(dot) {
+            document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('selected'));
+            dot.classList.add('selected');
+        };
+
+        // Slot selection (simple toggle, respect occupied)
+        window.selectSlot = function(slot) {
+            if (slot.classList.contains('occupied')) return;
+            if (slot.classList.contains('selected')) {
+                slot.classList.remove('selected');
+                slot.classList.add('available');
+                return;
+            }
+            document.querySelectorAll('.slot.selected').forEach(s => {
+                s.classList.remove('selected');
+                s.classList.add('available');
+            });
+            slot.classList.remove('available');
+            slot.classList.add('selected');
+        };
+
+        // Register & upgrade buttons (behaviour similar to original)
+        document.addEventListener('DOMContentLoaded', function() {
+            const registerBtn = document.getElementById('registerBtn');
+            const upgradeBtn = document.getElementById('upgradeBtn');
+            if (registerBtn) registerBtn.addEventListener('click', () => window.location.href = 'dashboard.html');
+            if (upgradeBtn) upgradeBtn.addEventListener('click', () => window.location.href = 'register.html');
+        });
+    </script>
+</body>
+</html>
