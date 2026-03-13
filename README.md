@@ -13,4 +13,4 @@ ParkEase is a comprehensive parking management system that allows attendants to 
 ## How to Run
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/parkease-frontend.git
+   git clone https://github.com/bridget42/parkease-frontend.git

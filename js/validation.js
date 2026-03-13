@@ -37,7 +37,7 @@ function calculateFee(vehicleType, arrivalTime, signOutTime) {
         'Boda-boda': { short: 1000, day: 2000, night: 2000 },
     };
     
-    const r = rates[vehicleType] || rates['Personal Car'];
+    const r = rates[vehicleType] || rates[''];
     return isShort ? r.short : (isDay ? r.day : r.night);
 }
 

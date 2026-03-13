@@ -8,13 +8,16 @@
 
     <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap"
       rel="stylesheet"
     />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap"
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght@100..700,0..1&amp;display=swap"
       rel="stylesheet"
     />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    <link
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
       rel="stylesheet"
     />
 
@@ -41,13 +44,15 @@
         },
       };
     </script>
+    <script src="js/validation.js"></script>
   </head>
   <body
     class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 min-h-screen"
   >
     <!-- Top Navigation Bar -->
     <header
-      class="sticky top-0 z-50 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 py-3">
+      class="sticky top-0 z-50 bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-6 py-3"
+    >
       <div class="max-w-7xl mx-auto flex items-center justify-between">
         <div class="flex items-center gap-8">
           <div class="flex items-center gap-2">
@@ -67,27 +72,32 @@
           <nav class="hidden md:flex items-center gap-1">
             <a
               class="px-4 py-2 text-sm font-medium text-primary bg-primary/10 rounded-lg"
-              link href="dashboard.html"
+              link
+              href="dashboard.html"
               >Dashboard</a
             >
             <a
               class="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary transition-colors"
-            link href="vehicle.html"
+              link
+              href="vehicle.html"
               >Vehicles</a
             >
             <a
               class="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary transition-colors"
-             link href="reports2.html"
+              link
+              href="reports2.html"
               >Revenue</a
             >
             <a
               class="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary transition-colors"
-             link href="reports2.html"
+              link
+              href="reports2.html"
               >Reports</a
             >
             <a
               class="px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-primary transition-colors"
-              link href="settings.html"
+              link
+              href="settings.html"
               >Settings</a
             >
           </nav>
@@ -106,7 +116,7 @@
           </div>
           <button
             class="p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg relative transition-colors"
-            onclick="window.location.href='reports2.html'"
+            onclick="window.location.href = 'reports2.html'"
           >
             <span class="material-symbols-outlined">notifications</span>
             <span
@@ -114,7 +124,10 @@
             ></span>
           </button>
           <div class="h-8 w-px bg-slate-200 dark:bg-slate-800 mx-1"></div>
-          <div class="flex items-center gap-3 cursor-pointer group" onclick="window.location.href='admin.html'">
+          <div
+            class="flex items-center gap-3 cursor-pointer group"
+            onclick="window.location.href = 'admin.html'"
+          >
             <div class="text-right hidden sm:block">
               <p class="text-xs font-semibold">Admin User</p>
               <p class="text-[10px] text-slate-500 uppercase tracking-wider">
@@ -147,7 +160,7 @@
         <div class="flex gap-3">
           <button
             class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors"
-            onclick="window.location.href='reports2.html'"
+            onclick="window.location.href = 'reports2.html'"
           >
             <span class="material-symbols-outlined text-lg"
               >calendar_today</span
@@ -156,7 +169,7 @@
           </button>
           <button
             class="flex items-center gap-2 px-4 py-2 bg-primary text-white rounded-lg text-sm font-semibold shadow-sm hover:opacity-90 transition-opacity"
-            onclick="window.location.href='reports2.html'"
+            onclick="window.location.href = 'reports2.html'"
           >
             <span class="material-symbols-outlined text-lg">download</span>
             Export Report
@@ -269,7 +282,7 @@
               <h4 class="font-bold text-lg">Recent Vehicle Activity</h4>
               <button
                 class="text-primary text-sm font-semibold hover:underline"
-                onclick="window.location.href='reports2.html'"
+                onclick="window.location.href = 'reports2.html'"
               >
                 View All
               </button>
@@ -319,7 +332,7 @@
                     <td class="px-6 py-4 text-right">
                       <button
                         class="text-slate-400 hover:text-primary transition-colors"
-                        onclick="window.location.href='sign.html'"
+                        onclick="window.location.href = 'sign.html'"
                       >
                         <span class="material-symbols-outlined"
                           >more_horiz</span
@@ -356,7 +369,7 @@
                     <td class="px-6 py-4 text-right">
                       <button
                         class="text-slate-400 hover:text-primary transition-colors"
-                        onclick="window.location.href='sign.html'"
+                        onclick="window.location.href = 'sign.html'"
                       >
                         <span class="material-symbols-outlined"
                           >more_horiz</span
@@ -393,7 +406,7 @@
                     <td class="px-6 py-4 text-right">
                       <button
                         class="text-slate-400 hover:text-primary transition-colors"
-                        onclick="window.location.href='sign.html'"
+                        onclick="window.location.href = 'sign.html'"
                       >
                         <span class="material-symbols-outlined"
                           >more_horiz</span
@@ -430,7 +443,7 @@
                     <td class="px-6 py-4 text-right">
                       <button
                         class="text-slate-400 hover:text-primary transition-colors"
-                        onclick="window.location.href='sign.html'"
+                        onclick="window.location.href = 'sign.html'"
                       >
                         <span class="material-symbols-outlined"
                           >more_horiz</span
@@ -511,7 +524,7 @@
             <div class="grid grid-cols-1 gap-3">
               <button
                 class="flex items-center gap-3 p-4 bg-primary/5 hover:bg-primary/10 border border-primary/20 rounded-xl transition-all group text-left"
-                onclick="window.location.href='vehicle.html'"
+                onclick="window.location.href = 'vehicle.html'"
               >
                 <div
                   class="w-10 h-10 rounded-lg bg-primary text-white flex items-center justify-center group-hover:scale-110 transition-transform"
@@ -531,7 +544,7 @@
               </button>
               <button
                 class="flex items-center gap-3 p-4 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-xl transition-all group text-left"
-                onclick="window.location.href='sign.html'"
+                onclick="window.location.href = 'sign.html'"
               >
                 <div
                   class="w-10 h-10 rounded-lg bg-amber-500 text-white flex items-center justify-center group-hover:scale-110 transition-transform"
@@ -551,7 +564,7 @@
               </button>
               <button
                 class="flex items-center gap-3 p-4 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-xl transition-all group text-left"
-                onclick="window.location.href='sign.html'"
+                onclick="window.location.href = 'sign.html'"
               >
                 <div
                   class="w-10 h-10 rounded-lg bg-blue-500 text-white flex items-center justify-center group-hover:scale-110 transition-transform"
@@ -571,7 +584,7 @@
               </button>
               <button
                 class="flex items-center gap-3 p-4 bg-slate-50 dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 rounded-xl transition-all group text-left"
-                onclick="window.location.href='reports2.html'"
+                onclick="window.location.href = 'reports2.html'"
               >
                 <div
                   class="w-10 h-10 rounded-lg bg-slate-600 text-white flex items-center justify-center group-hover:scale-110 transition-transform"
@@ -669,10 +682,14 @@
         <a class="hover:text-primary transition-colors" href="settings.html"
           >Support Center</a
         >
-        <a class="hover:text-primary transition-colors" href="terms-and-policy.html"
+        <a
+          class="hover:text-primary transition-colors"
+          href="terms-and-policy.html"
           >Privacy Policy</a
         >
-        <a class="hover:text-primary transition-colors" href="terms-and-policy.html"
+        <a
+          class="hover:text-primary transition-colors"
+          href="terms-and-policy.html"
           >Terms of Service</a
         >
       </div>
